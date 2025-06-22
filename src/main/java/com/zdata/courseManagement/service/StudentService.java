@@ -15,10 +15,11 @@ import java.util.*;
 @Service
 public class StudentService {
 
-    private final Map<UUID, Student> students = new HashMap<>();
-    private final Map<UUID, Course> courses = new HashMap<>();
-    private final List<Registration> registrations = new ArrayList<>();
+    private final Map<UUID, Student> students = new HashMap<>(); // Store students by UUID
+    private final Map<UUID, Course> courses = new HashMap<>(); // Store courses by UUID
+    private final List<Registration> registrations = new ArrayList<>(); // Store registrations
 
+    // Add a new student
     public Student addStudent(StudentDTO dto) {
         if (students.values().stream().anyMatch(s -> s.getEmail().equals(dto.getEmail()))) {
               throw new CustomException("Email already exists.");
@@ -28,6 +29,7 @@ public class StudentService {
         return student;
     }
 
+    // Add a new course
     public Course addCourse(CourseDTO dto){
         if(courses.values().stream().anyMatch(c -> c.getCode().equals(dto.getCode()))){
             throw new CustomException("Course code already exists.");
@@ -37,10 +39,12 @@ public class StudentService {
         return course;
     }
 
+    // Get all students
     public List<Course> getAllCourse(){
         return new ArrayList<>(courses.values());
     }
 
+    // Register a student for a course
     public void register(UUID studentId, UUID courseId){
      validateStudentAndCourse(studentId, courseId);
      boolean alreadyRegistered = registrations.stream().anyMatch(
@@ -50,6 +54,7 @@ public class StudentService {
      registrations.add(new Registration(studentId, courseId, LocalDateTime.now()));
     }
 
+    // Drop a course for a student
     public void drop(UUID studentId, UUID courseId){
         validateStudentAndCourse(studentId, courseId);
         boolean removed = registrations.removeIf(r -> r.getStudentId().equals(studentId) && r.getCourseId().equals(courseId));
@@ -58,6 +63,7 @@ public class StudentService {
 
     }
 
+    // Get all courses registered by a student
     public List<RegistrationResponseDTO> getStudentCourse(UUID studentId){
         if(!students.containsKey(studentId)) {
             throw new CustomException("Student not found.");
@@ -74,7 +80,7 @@ public class StudentService {
         return response;
         }
 
-
+    // Validate if student and course exist
     private void validateStudentAndCourse(UUID studentId, UUID courseId){
         if(!students.containsKey(studentId)) throw new CustomException("Student not found.");
         if(!courses.containsKey(courseId)) throw new CustomException("Course not found.");

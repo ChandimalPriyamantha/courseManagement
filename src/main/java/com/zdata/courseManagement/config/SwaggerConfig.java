@@ -10,6 +10,6 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI apiInfo() {
         return new OpenAPI()
-                .info(new Info().title("Student Course API").version("1.0").description("ZDATA Backend Assessment API"));
+                .info(new Info().title("Student Course API").version("1.0").description("ZDATA Backend Assignment API"));
     }
 }

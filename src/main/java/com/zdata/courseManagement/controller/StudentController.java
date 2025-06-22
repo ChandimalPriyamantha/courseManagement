@@ -19,24 +19,30 @@ public class StudentController {
 
 
     public StudentController(StudentService service) {
+
         this.service = service;
     }
 
+    // Create a new student
     @PostMapping
     public Student createStudent(@Valid @RequestBody StudentDTO dto){
+
         return service.addStudent(dto);
     }
 
+    // Register a student for a course
     @PostMapping("/{studentId}/register/{courseId}")
     public void registerCourse(@PathVariable UUID studentId, @PathVariable UUID courseId) {
         service.register(studentId, courseId);
     }
 
+    // Drop a course for a student
     @DeleteMapping("/{studentId}/drop/{courseId}")
     public void dropCourse(@PathVariable UUID studentId, @PathVariable UUID courseId) {
         service.drop(studentId, courseId);
     }
 
+    // Get all courses registered by a student
     @GetMapping("/{studentId}/courses")
     public List<RegistrationResponseDTO> getCourses(@PathVariable UUID studentId) {
         return service.getStudentCourse(studentId);

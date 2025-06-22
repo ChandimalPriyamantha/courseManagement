@@ -24,7 +24,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    void addStudent_successfullyAddsStudent() {
+    void addStudent_successfullyAddsStudent() { // Test for adding a student
         StudentDTO dto = new StudentDTO();
         dto.setName("Alice");
         dto.setEmail("alice@test.com");
@@ -36,7 +36,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    void addStudent_duplicateEmail_throwsException() {
+    void addStudent_duplicateEmail_throwsException() { // Test for duplicate email
         StudentDTO dto = new StudentDTO();
         dto.setName("Bob");
         dto.setEmail("bob@test.com");
@@ -46,7 +46,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    void addCourse_successfullyAddsCourse() {
+    void addCourse_successfullyAddsCourse() { // Test for adding a course
         CourseDTO course = new CourseDTO();
         course.setCode("CS101");
         course.setTitle("Intro to CS");
@@ -59,7 +59,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    void addCourse_duplicateCode_throwsException() {
+    void addCourse_duplicateCode_throwsException() { // Test for duplicate course code
         CourseDTO dto = new CourseDTO();
         dto.setCode("CS202");
         dto.setTitle("Data Structures");
@@ -70,7 +70,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    void registerStudentToCourse_success() {
+    void registerStudentToCourse_success() { // Test for registering a student to a course
         UUID studentId = studentService.addStudent(new StudentDTO("Student", "test@student.com")).getId();
         UUID courseId = studentService.addCourse(new CourseDTO("CS999", "Course", "Prof")).getId();
 
@@ -82,7 +82,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    void registerTwice_throwsException() {
+    void registerTwice_throwsException() { // Test for registering a student to the same course twice
         UUID studentId = studentService.addStudent(new StudentDTO("Stu", "a@a.com")).getId();
         UUID courseId = studentService.addCourse(new CourseDTO("X100", "X Course", "Instructor")).getId();
 
@@ -91,7 +91,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    void dropUnregisteredCourse_throwsException() {
+    void dropUnregisteredCourse_throwsException() { // Test for dropping a course that is not registered
         UUID studentId = studentService.addStudent(new StudentDTO("Jack", "jack@abc.com")).getId();
         UUID courseId = studentService.addCourse(new CourseDTO("Z999", "Z Course", "Zara")).getId();
 
@@ -99,7 +99,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    void dropRegisteredCourse_success() {
+    void dropRegisteredCourse_success() { // Test for dropping a registered course
         UUID studentId = studentService.addStudent(new StudentDTO("Luke", "luke@abc.com")).getId();
         UUID courseId = studentService.addCourse(new CourseDTO("Y123", "Y Course", "Yin")).getId();
 
@@ -111,7 +111,7 @@ public class StudentServiceTest {
     }
 
     @Test
-    void getStudentCourses_invalidStudent_throwsException() {
+    void getStudentCourses_invalidStudent_throwsException() { // Test for getting courses of a non-existent student
         UUID fakeId = UUID.randomUUID();
         assertThrows(CustomException.class, () -> studentService.getStudentCourse(fakeId));
     }
