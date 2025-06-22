@@ -6,7 +6,7 @@ A Spring Boot-based REST API for managing students, courses, and their registrat
 
 ##  How to Run the Application
 
-### 🛠 Requirements
+###  Requirements
 - Java 17
 - Maven 3.9.10
 - Spring Boot 3.2.4
