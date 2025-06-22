@@ -7,6 +7,7 @@ import com.zdata.courseManagement.exception.CustomException;
 import com.zdata.courseManagement.model.Course;
 import com.zdata.courseManagement.model.Registration;
 import com.zdata.courseManagement.model.Student;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
@@ -22,7 +23,7 @@ public class StudentService {
     // Add a new student
     public Student addStudent(StudentDTO dto) {
         if (students.values().stream().anyMatch(s -> s.getEmail().equals(dto.getEmail()))) {
-              throw new CustomException("Email already exists.");
+              throw new CustomException("Email already exists.", HttpStatus.CONFLICT);
         }
         Student student = new Student(UUID.randomUUID(), dto.getName(), dto.getEmail());
         students.put(student.getId(), student);
@@ -32,7 +33,7 @@ public class StudentService {
     // Add a new course
     public Course addCourse(CourseDTO dto){
         if(courses.values().stream().anyMatch(c -> c.getCode().equals(dto.getCode()))){
-            throw new CustomException("Course code already exists.");
+            throw new CustomException("Course code already exists.", HttpStatus.CONFLICT);
         }
         Course course = new Course(UUID.randomUUID(), dto.getCode(), dto.getTitle(),dto.getInstructor());
         courses.put(course.getId(), course);
@@ -49,7 +50,7 @@ public class StudentService {
      validateStudentAndCourse(studentId, courseId);
      boolean alreadyRegistered = registrations.stream().anyMatch(
              r -> r.getStudentId().equals(studentId) && r.getCourseId().equals(courseId));
-     if(alreadyRegistered) throw new CustomException("Student already registered for this course.");
+     if(alreadyRegistered) throw new CustomException("Student already registered for this course.", HttpStatus.CONFLICT);
 
      registrations.add(new Registration(studentId, courseId, LocalDateTime.now()));
     }
@@ -58,7 +59,7 @@ public class StudentService {
     public void drop(UUID studentId, UUID courseId){
         validateStudentAndCourse(studentId, courseId);
         boolean removed = registrations.removeIf(r -> r.getStudentId().equals(studentId) && r.getCourseId().equals(courseId));
-        if(!removed) throw new CustomException("Course not registered..");
+        if(!removed) throw new CustomException("Course not registered..", HttpStatus.NOT_FOUND);
 
 
     }
@@ -66,7 +67,7 @@ public class StudentService {
     // Get all courses registered by a student
     public List<RegistrationResponseDTO> getStudentCourse(UUID studentId){
         if(!students.containsKey(studentId)) {
-            throw new CustomException("Student not found.");
+            throw new CustomException("Student not found.", HttpStatus.NOT_FOUND);
         }
 
         List<RegistrationResponseDTO> response = new ArrayList<>();
@@ -82,7 +83,7 @@ public class StudentService {
 
     // Validate if student and course exist
     private void validateStudentAndCourse(UUID studentId, UUID courseId){
-        if(!students.containsKey(studentId)) throw new CustomException("Student not found.");
-        if(!courses.containsKey(courseId)) throw new CustomException("Course not found.");
+        if(!students.containsKey(studentId)) throw new CustomException("Student not found.", HttpStatus.NOT_FOUND);
+        if(!courses.containsKey(courseId)) throw new CustomException("Course not found.", HttpStatus.NOT_FOUND);
     }
 }
